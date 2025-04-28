@@ -1,9 +1,9 @@
-from definitions import SYMBOL, NUMBER, LIST, ATOM, EXP, ENV
+from definitions import SYMBOL, ATOM, EXP
 
 def tokenize(string: str) -> list:
     """
     Convert a string into a list of tokens.
-    
+
     Parameters:
     string (str): target string to turn into a list of tokens separated by space.
 
@@ -14,7 +14,7 @@ def tokenize(string: str) -> list:
     return string.replace('(',' ( ').replace(')', ' ) ').split()
 
 
-    def structure_tokens(tokens: list) -> EXP:
+def structure_tokens(tokens: list) -> EXP:
     """
     Convert list of tokens into lisp expressions recursively
 
@@ -25,14 +25,14 @@ def tokenize(string: str) -> list:
     EXP: lisp expression
     """
     if len(tokens) == 0:
-        raiseSyntaxError('unexpected EOF')
+        raise SyntaxError('unexpected EOF')
     token = tokens.pop(0)
     if token == '(':
         L = []
         while tokens[0] != ')':
             L.append(structure_tokens(tokens))
         tokens.pop(0) # tokens[0] is ) so pop it
-        return L 
+        return L
     elif token == ')':
         raise SyntaxError('unexpected )')
     else:
@@ -49,7 +49,7 @@ def to_atom(token: str) -> ATOM:
     Returns:
     ATOM: lisp atom
     """
-    try: 
+    try:
         return int(token)
     except ValueError:
         try:
@@ -57,11 +57,11 @@ def to_atom(token: str) -> ATOM:
         except ValueError:
             return SYMBOL(token)
 
-            
+
 def parse(raw_expression: str) -> EXP:
     """
     Convert a string into a lisp expression
-    
+
     Parameters:
     raw_expression (str): raw expression as a string to convert into a lisp expression
 
